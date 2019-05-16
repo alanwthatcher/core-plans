@@ -60,7 +60,7 @@ project_root="$(git rev-parse --show-toplevel)"
   cd "$project_root"
   # Disable exit on error for this subshell, so we can capture the build
   # failure exit status and return our soft-fail exit code
-  set +e
+  set +eo pipefail
   env DO_CHECK=true hab pkg build "$plan"
 )
 status=$?
