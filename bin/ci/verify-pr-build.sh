@@ -56,14 +56,15 @@ echo "--- :construction: Starting build for $plan"
 # We want to ensure that we build from the project root. This
 # creates a subshell so that the cd will only affect that process
 project_root="$(git rev-parse --show-toplevel)"
+# Disable exit on error for this subshell, so we can capture the build
+# failure exit status and return our soft-fail exit code
+set +e 
 (
   cd "$project_root"
-  # Disable exit on error for this subshell, so we can capture the build
-  # failure exit status and return our soft-fail exit code
-  set +eo pipefail
   env DO_CHECK=true hab pkg build "$plan"
 )
 status=$?
+set -e
 
 if [[ $status -ne 0 ]]; then
   echo "--- :rotating_light: :rotating_light: :rotating_light: BUILD FAILED :rotating_light: :rotating_light: :rotating_light:"
