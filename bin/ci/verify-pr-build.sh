@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -u
+set -euo pipefail
 
 # Don't attempt to build the following plans. They have resource requirements
 # or build times that exceed the currently available resources on our CI
@@ -32,7 +32,7 @@ for bl in "${PLAN_BLACKLIST[@]}"; do
     if [[ "${CI:-}" == "true" ]]; then
       buildkite-agent annotate --style 'warning' ":bangbang: ${plan} found in build blacklist. Skipping build. "
     fi
-    exit 0;
+    exit 52;
   fi
 done
 
@@ -64,6 +64,6 @@ status=$?
 
 if [[ $status -ne 0 ]]; then
   echo "--- :rotating_light: :rotating_light: :rotating_light: BUILD FAILED :rotating_light: :rotating_light: :rotating_light:"
+  exit 52
 fi
 
-exit 0
